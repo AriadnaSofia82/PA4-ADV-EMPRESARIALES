@@ -19,7 +19,7 @@
             <p class="eyebrow">Spring Boot 4.1 · Spring MVC · Inyección de Dependencias</p>
             <h1>Sistema de Pedidos</h1>
             <p class="subtitulo">
-                El catálogo, precio y stock provienen de inventario-service; H2 conserva los pedidos durante la ejecución.
+                El catálogo, precio y stock provienen de inventario-service; MySQL conserva los pedidos, las anulaciones y las revisiones.
             </p>
         </div>
         <c:url var="logoutUrl" value="/logout"/>
@@ -101,11 +101,27 @@
     </section>
 
     <section class="tarjeta">
-        <div class="titulo-tabla">
-            <h2>Pedidos registrados</h2>
-            <p>
-                Cada pedido conserva un snapshot del código, nombre y precio vigente al momento de la compra.
-            </p>
+        <div class="titulo-tabla titulo-tabla-acciones">
+            <div>
+                <h2>Pedidos registrados</h2>
+                <p>
+                    Cada pedido conserva un snapshot del código, nombre y precio vigente al momento de la compra.
+                </p>
+            </div>
+            <div class="revision-acciones">
+                <c:url var="revisionUrl" value="/revision"/>
+                <a href="${revisionUrl}" class="boton-accion boton-revision">
+                    <span class="boton-icono" aria-hidden="true">✓</span>
+                    <span>Revisar pedidos</span>
+                    <span class="boton-flecha" aria-hidden="true">→</span>
+                </a>
+                <c:url var="reportePedidosUrl" value="/reportes/pedidos"/>
+                <a href="${reportePedidosUrl}" class="boton-accion boton-reporte">
+                    <span class="boton-icono" aria-hidden="true">▦</span>
+                    <span>Ver reporte de pedidos</span>
+                    <span class="boton-flecha" aria-hidden="true">→</span>
+                </a>
+            </div>
         </div>
 
         <div class="tabla-scroll">
@@ -153,6 +169,7 @@
                         <td colspan="8" class="sin-datos">Aún no hay pedidos.</td>
                     </tr>
                 </c:if>
+
                 </tbody>
             </table>
         </div>

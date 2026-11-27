@@ -1,51 +1,47 @@
-/*
-  MIGRACIÓN para una InventarioDB ya creada con la versión anterior.
-  Agrega la columna precio sin eliminar el stock actual.
-*/
+
+-- =====================================================
+-- MIGRACION: AGREGAR PRECIO A PRODUCTO_INVENTARIO
+-- MYSQL
+-- =====================================================
+
 USE InventarioDB;
-GO
 
-IF COL_LENGTH('dbo.producto_inventario', 'precio') IS NULL
-BEGIN
-    ALTER TABLE dbo.producto_inventario
-        ADD precio DECIMAL(12,2) NULL;
-END;
-GO
+-- Agregar precio si todavía no existe
+SET @existe_precio = (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'producto_inventario'
+      AND COLUMN_NAME = 'precio'
+);
 
-UPDATE dbo.producto_inventario
+SET @sql_precio = IF(
+    @existe_precio = 0,
+    'ALTER TABLE producto_inventario
+     ADD COLUMN precio DECIMAL(12,2) NULL',
+    'SELECT "La columna precio ya existe" AS mensaje'
+);
+
+PREPARE stmt_precio FROM @sql_precio;
+EXECUTE stmt_precio;
+DEALLOCATE PREPARE stmt_precio;
+
+-- Actualizar precios sin modificar el stock
+UPDATE producto_inventario
 SET precio = CASE codigo
-    WHEN 'LAP-001' THEN 2500.00
-    WHEN 'MON-001' THEN 850.00
-    WHEN 'TEC-001' THEN 120.00
-    ELSE COALESCE(precio, 0.00)
-END;
-GO
+                 WHEN 'LAP-001' THEN 2500.00
+                 WHEN 'MON-001' THEN 850.00
+                 WHEN 'TEC-001' THEN 120.00
+                 ELSE COALESCE(precio, 0.00)
+    END
+WHERE precio IS NULL
+   OR codigo IN ('LAP-001', 'MON-001', 'TEC-001');
 
-IF EXISTS (
-    SELECT 1
-    FROM sys.columns
-    WHERE object_id = OBJECT_ID(N'dbo.producto_inventario')
-      AND name = N'precio'
-      AND is_nullable = 1
-)
-BEGIN
-    ALTER TABLE dbo.producto_inventario
-        ALTER COLUMN precio DECIMAL(12,2) NOT NULL;
-END;
-GO
+-- Comprobar que no queden precios nulos
+ALTER TABLE producto_inventario
+    MODIFY COLUMN precio DECIMAL(12,2) NOT NULL;
 
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.check_constraints
-    WHERE name = N'CK_producto_inventario_precio'
-)
-BEGIN
-    ALTER TABLE dbo.producto_inventario
-        ADD CONSTRAINT CK_producto_inventario_precio CHECK (precio >= 0);
-END;
-GO
-
+-- Verificar resultados
 SELECT id, codigo, nombre, precio, stock, version
-FROM dbo.producto_inventario
+FROM producto_inventario
 ORDER BY id;
-GO

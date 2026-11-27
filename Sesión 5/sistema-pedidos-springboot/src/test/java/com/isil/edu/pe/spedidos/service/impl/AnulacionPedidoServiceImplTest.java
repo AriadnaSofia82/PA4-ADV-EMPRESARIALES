@@ -7,9 +7,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.isil.edu.pe.spedidos.client.DevolucionStockClient;
-import com.isil.edu.pe.spedidos.client.InventarioNoDisponibleException;
-import com.isil.edu.pe.spedidos.client.dto.DevolucionStockResponse;
+import com.isil.edu.pe.spedidos.client.inventario.DevolucionStockClient;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioNoDisponibleException;
+import com.isil.edu.pe.spedidos.client.inventario.dto.DevolucionStockResponse;
 import com.isil.edu.pe.spedidos.entity.AnulacionPedido;
 import com.isil.edu.pe.spedidos.entity.Pedido;
 import com.isil.edu.pe.spedidos.entity.PedidoEstado;
@@ -19,6 +19,7 @@ import com.isil.edu.pe.spedidos.repository.PedidoRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

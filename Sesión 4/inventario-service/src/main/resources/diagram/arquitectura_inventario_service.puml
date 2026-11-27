@@ -1,14 +1,74 @@
 @startuml
+title FIGURA 3. ARQUITECTURA DE INVENTARIO-SERVICE
+
+top to bottom direction
 skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-actor "Sistema de Pedidos\n/Postman" as client
-component "ProductoResource\nJakarta REST" as api
-component "InventarioService\n@Stateless" as service
-component "EntityManager\nJakarta Persistence" as jpa
-database "SQL Server Express 2025\nInventarioDB" as db
+actor "Sistema de Pedidos\nCliente REST" as Client
 
-client --> api : HTTP + JSON
-api --> service : @EJB
-service --> jpa : @PersistenceContext
-jpa --> db : JDBC / InventarioDS
+package "CAPA API - JAX-RS" {
+    [RestApplication\n/api] as Application
+    [ProductoResource\n/inventario/productos] as Resource
+
+    [ConstraintViolationExceptionMapper] as ValidationMapper
+    [InventarioExceptionMapper] as ExceptionMapper
+}
+
+package "CAPA DE SERVICIOS" {
+    [InventarioService\n@Stateless] as Service
+    [InventarioException] as Exception
+}
+
+package "CAPA DE DOMINIO" {
+    [ProductoInventario\n@Entity] as Product
+}
+
+package "CAPA DTO" {
+    [ProductoResponse]
+    [ReservaStockRequest]
+    [ReservaStockResponse]
+    [StockResponse]
+    [ApiError]
+}
+
+database "MySQL\nInventarioDB" as DB
+
+Client --> Application : HTTP
+Application --> Resource : Enrutamiento REST
+
+Resource --> Service : Operaciones de inventario
+Resource --> Product : DTO / respuesta
+
+Service --> Product : Gestión de entidades
+Product --> DB : JPA / EntityManager
+
+Resource --> ValidationMapper : Errores de validación
+Resource --> ExceptionMapper : Excepciones
+
+Service --> Exception : Errores de negocio
+
+Resource --> ProductoResponse
+Resource --> ReservaStockRequest
+Resource --> ReservaStockResponse
+Resource --> StockResponse
+
+note right of Service
+Operaciones principales:
+- Listar productos
+- Obtener por ID
+- Obtener por código
+- Reservar stock
+- Consultar stock
+end note
+
+note bottom of DB
+Persistencia:
+producto_inventario
+
+Incluye precio, stock,
+código y versión.
+end note
+
 @enduml

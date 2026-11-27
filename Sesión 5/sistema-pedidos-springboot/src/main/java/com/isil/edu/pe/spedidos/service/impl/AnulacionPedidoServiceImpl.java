@@ -1,8 +1,8 @@
 package com.isil.edu.pe.spedidos.service.impl;
 
-import com.isil.edu.pe.spedidos.client.DevolucionStockClient;
-import com.isil.edu.pe.spedidos.client.InventarioClientException;
-import com.isil.edu.pe.spedidos.client.dto.DevolucionStockResponse;
+import com.isil.edu.pe.spedidos.client.inventario.DevolucionStockClient;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioClientException;
+import com.isil.edu.pe.spedidos.client.inventario.dto.DevolucionStockResponse;
 import com.isil.edu.pe.spedidos.entity.AnulacionPedido;
 import com.isil.edu.pe.spedidos.entity.Pedido;
 import com.isil.edu.pe.spedidos.entity.PedidoEstado;

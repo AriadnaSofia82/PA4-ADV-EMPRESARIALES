@@ -1,6 +1,6 @@
 package com.isil.edu.pe.spedidos.controller;
 
-import com.isil.edu.pe.spedidos.client.InventarioNoDisponibleException;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioNoDisponibleException;
 import com.isil.edu.pe.spedidos.controller.dto.ApiErrorResponse;
 import com.isil.edu.pe.spedidos.exception.AnulacionPedidoException;
 import jakarta.servlet.http.HttpServletRequest;

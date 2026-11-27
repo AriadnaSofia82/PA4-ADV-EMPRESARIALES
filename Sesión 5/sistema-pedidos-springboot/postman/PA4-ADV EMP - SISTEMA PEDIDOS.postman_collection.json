@@ -1,0 +1,250 @@
+{
+  "info": {
+    "_postman_id": "c3f9beea-d51f-420c-a7a4-5a5b13f6ee77",
+    "name": "PA4-ADV EMP - SISTEMA PEDIDOS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54412828",
+    "_collection_link": "https://go.postman.co/collection/54412828-c3f9beea-d51f-420c-a7a4-5a5b13f6ee77?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00 - Autenticación OPERADOR",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 - Autenticación OPERADOR Log in",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "operador"
+            },
+            {
+              "key": "password",
+              "value": "OperadorDemo2026!"
+            },
+            {
+              "key": "_csrf",
+              "value": "M8MGdwImi1SFSwqKtZwqDKBkLCQ_Oo2VW5Xz57lj4Hs_8_QxCvpjQjdFuWeoKGy91LEePJAGARxZCe64YvDB1oBThkwMy8QC"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Registrar revisión de pedido",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "pedidoId",
+              "value": "1"
+            },
+            {
+              "key": "observacion",
+              "value": "Pedido revisado correctamente"
+            },
+            {
+              "key": "_csrf",
+              "value": "JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/revision",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "revision"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Evitar revisión duplicada",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "pedidoId",
+              "value": "1"
+            },
+            {
+              "key": "observacion",
+              "value": "Prueba de revision duplicada"
+            },
+            {
+              "key": "_csrf",
+              "value": "JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/revision",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "revision"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - Validar pedido inexistente",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "pedidoId",
+              "value": "999999"
+            },
+            {
+              "key": "observacion",
+              "value": "Intento de revisar un pedido inexistente."
+            },
+            {
+              "key": "_csrf",
+              "value": "JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/revision",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "revision"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - Validar observación inválida",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "pedidoId",
+              "value": "12"
+            },
+            {
+              "key": "observacion",
+              "value": ""
+            },
+            {
+              "key": "_csrf",
+              "value": "JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/revision",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "revision"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - Rollback transaccional",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/revision?pedidoId=5&observacion=Prueba de rollback transaccional&_csrf=JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "revision"
+          ],
+          "query": [
+            {
+              "key": "pedidoId",
+              "value": "5"
+            },
+            {
+              "key": "observacion",
+              "value": "Prueba de rollback transaccional"
+            },
+            {
+              "key": "_csrf",
+              "value": "JNAM1IsdDtsrz0OLjuKqmi5go8JslnxWaNJqglqk30_Bz6FVELI_sb55OOoG93O97M-eqx9SjqMP9Ut7WeBeummXvXuj98Nk"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

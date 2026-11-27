@@ -1,77 +1,56 @@
-/*
-  Instalación limpia de InventarioDB.
-  Ejecutar con una cuenta administradora en SQL Server Management Studio (SSMS).
-*/
 
-IF DB_ID(N'InventarioDB') IS NULL
-BEGIN
-    CREATE DATABASE InventarioDB;
-END;
-GO
+-- =====================================================
+-- INSTALACION DE INVENTARIODB EN MYSQL
+-- =====================================================
 
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.server_principals
-    WHERE name = N'inventario_app'
-)
-BEGIN
-    CREATE LOGIN inventario_app
-        WITH PASSWORD = 'Inventario2026!',
-             CHECK_POLICY = ON;
-END;
-GO
+CREATE DATABASE IF NOT EXISTS InventarioDB
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
 USE InventarioDB;
-GO
 
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.database_principals
-    WHERE name = N'inventario_app'
-)
-BEGIN
-    CREATE USER inventario_app FOR LOGIN inventario_app WITH DEFAULT_SCHEMA = dbo;
-END;
-GO
+-- Crear usuario de inventario
+CREATE USER IF NOT EXISTS 'inventario_app'@'localhost'
+IDENTIFIED BY 'Inventario2026!';
 
-IF OBJECT_ID(N'dbo.producto_inventario', N'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.producto_inventario (
-        id       BIGINT IDENTITY(1,1) NOT NULL,
-        codigo   VARCHAR(30)          NOT NULL,
-        nombre   VARCHAR(120)         NOT NULL,
-        precio   DECIMAL(12,2)        NOT NULL,
-        stock    INT                  NOT NULL,
-        version  BIGINT               NOT NULL CONSTRAINT DF_producto_version DEFAULT (0),
-        CONSTRAINT PK_producto_inventario PRIMARY KEY (id),
-        CONSTRAINT UQ_producto_inventario_codigo UNIQUE (codigo),
-        CONSTRAINT CK_producto_inventario_precio CHECK (precio >= 0),
-        CONSTRAINT CK_producto_inventario_stock CHECK (stock >= 0)
-    );
-END;
-GO
+-- Crear tabla de productos
+CREATE TABLE IF NOT EXISTS producto_inventario (
+                                                   id BIGINT NOT NULL AUTO_INCREMENT,
+                                                   codigo VARCHAR(30) NOT NULL,
+    nombre VARCHAR(120) NOT NULL,
+    precio DECIMAL(12,2) NOT NULL,
+    stock INT NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0,
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.producto_inventario TO inventario_app;
-GO
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_producto_codigo (codigo),
 
-MERGE dbo.producto_inventario AS target
-USING (
-    VALUES
-        ('LAP-001', 'Laptop',  CAST(2500.00 AS DECIMAL(12,2)), 10),
-        ('MON-001', 'Monitor', CAST(850.00  AS DECIMAL(12,2)), 20),
-        ('TEC-001', 'Teclado', CAST(120.00  AS DECIMAL(12,2)), 30)
-) AS source(codigo, nombre, precio, stock)
-ON target.codigo = source.codigo
-WHEN MATCHED THEN
-    UPDATE SET
-        target.nombre = source.nombre,
-        target.precio = source.precio
-WHEN NOT MATCHED THEN
-    INSERT (codigo, nombre, precio, stock, version)
-    VALUES (source.codigo, source.nombre, source.precio, source.stock, 0);
-GO
+    CONSTRAINT chk_producto_precio CHECK (precio >= 0),
+    CONSTRAINT chk_producto_stock CHECK (stock >= 0)
 
+    ) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_unicode_ci;
+
+-- Insertar productos de demostración
+INSERT INTO producto_inventario
+(codigo, nombre, precio, stock, version)
+VALUES
+    ('LAP-001', 'Laptop', 2500.00, 10, 0),
+    ('MON-001', 'Monitor', 850.00, 20, 0),
+    ('TEC-001', 'Teclado', 120.00, 30, 0)
+    ON DUPLICATE KEY UPDATE
+                         nombre = VALUES(nombre),
+                         precio = VALUES(precio);
+
+-- Permisos del usuario
+GRANT SELECT, INSERT, UPDATE, DELETE
+      ON InventarioDB.producto_inventario
+          TO 'inventario_app'@'localhost';
+
+FLUSH PRIVILEGES;
+
+-- Verificar productos
 SELECT id, codigo, nombre, precio, stock, version
-FROM dbo.producto_inventario
+FROM producto_inventario
 ORDER BY id;
-GO

@@ -28,29 +28,55 @@ public class SecurityConfig {
 
                         .requestMatchers("/h2-console/**").denyAll()
 
+                        // Registrar pedidos
                         .requestMatchers(HttpMethod.POST, "/pedidos")
                         .hasRole("OPERADOR")
 
+                        // Consultar pedidos
+                        .requestMatchers(HttpMethod.GET, "/pedidos")
+                        .hasAnyRole("OPERADOR", "CONSULTA")
+
+                        // Revisión de pedidos: solamente operador
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/revision",
+                                "/revision/**"
+                        ).hasRole("OPERADOR")
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/revision",
+                                "/revision/**"
+                        ).hasRole("OPERADOR")
+
+                        // Reportes
                         .requestMatchers(HttpMethod.GET, "/reportes/**")
                         .hasAnyRole("OPERADOR", "CONSULTA")
 
+                        // API de pedidos
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/v1/pedidos",
                                 "/api/v1/pedidos/**"
-                        )
-                        .hasAnyRole("OPERADOR", "CONSULTA")
+                        ).hasAnyRole("OPERADOR", "CONSULTA")
 
-                        .requestMatchers(HttpMethod.GET, "/pedidos")
-                        .hasAnyRole("OPERADOR", "CONSULTA")
+                        // Anulaciones
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/v1/anulaciones"
+                        ).hasRole("OPERADOR")
 
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/anulaciones"
+                        ).hasAnyRole("OPERADOR", "CONSULTA")
+
+                        // Cualquier otra operación requiere autenticación
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(Customizer.withDefaults())
-
                 .logout(Customizer.withDefaults())
-
                 .build();
     }
 

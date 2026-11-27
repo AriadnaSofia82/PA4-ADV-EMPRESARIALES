@@ -24,6 +24,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -38,12 +39,14 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <finalName>inventario-service</finalName>
 
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -73,53 +76,49 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>${wildfly.maven.plugin.version}</version>
 
-                <!--
-                    Configuración utilizada al ejecutar:
-                    mvn clean wildfly:run
-                -->
                 <configuration>
-                    <!-- Configuración externa de SQL Server -->
+
+                    <!-- Configuración externa de MySQL -->
                     <propertiesFile>
                         ${project.basedir}/config/database.properties
                     </propertiesFile>
 
-                    <!--
-                        Desplaza todos los puertos de WildFly en 2:
-                        HTTP       8080 -> 8082
-                        HTTPS      8443 -> 8445
-                        Management 9990 -> 9992
-                    -->
+                    <!-- Puerto HTTP: 8082 -->
                     <javaOpts>
                         <javaOpt>-Djboss.socket.binding.port-offset=${wildfly.port.offset}</javaOpt>
                     </javaOpts>
+
                 </configuration>
 
                 <executions>
-                    <!--
-                        wildfly:run ejecuta previamente la fase package.
-                        En esa fase se provisiona target/server con el add-on
-                        de Microsoft SQL Server y se copia el WAR.
-                    -->
                     <execution>
-                        <id>provisionar-wildfly-con-sqlserver</id>
+                        <id>provisionar-wildfly-con-mysql</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
                         </goals>
+
                         <configuration>
+
                             <discover-provisioning-info>
                                 <version>${wildfly.version}</version>
+
                                 <addOns>
-                                    <addOn>mssqlserver</addOn>
+                                    <addOn>mysql</addOn>
                                 </addOns>
+
                             </discover-provisioning-info>
 
                             <overwriteProvisionedServer>true</overwriteProvisionedServer>
                             <skipDeployment>false</skipDeployment>
+
                         </configuration>
                     </execution>
                 </executions>
+
             </plugin>
+
         </plugins>
     </build>
+
 </project>

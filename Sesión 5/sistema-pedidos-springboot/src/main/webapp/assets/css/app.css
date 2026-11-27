@@ -30,3 +30,85 @@ code { font-family: Consolas, monospace; }
     .flujo { margin-top: 16px; white-space: normal; }
     .form-grid { grid-template-columns: 1fr; }
 }
+/* Contenedor de botones de acciones */
+.revision-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+/* Botones principales */
+.boton-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 12px 22px;
+
+    border: none;
+    border-radius: 10px;
+
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Botón revisar pedidos */
+.boton-revision {
+    background: #2563eb;
+}
+
+.boton-revision:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+    color: #ffffff;
+}
+
+/* Botón reporte */
+.boton-reporte {
+    background: #0f766e;
+}
+
+.boton-reporte:hover {
+    background: #115e59;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 118, 110, 0.25);
+    color: #ffffff;
+}
+
+/* Iconos */
+.boton-icono {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+/* Flecha */
+.boton-flecha {
+    font-size: 19px;
+    transition: transform 0.25s ease;
+}
+
+.boton-accion:hover .boton-flecha {
+    transform: translateX(4px);
+}
+
+/* Adaptación para móviles */
+@media (max-width: 600px) {
+    .revision-acciones {
+        flex-direction: column;
+    }
+
+    .boton-accion {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

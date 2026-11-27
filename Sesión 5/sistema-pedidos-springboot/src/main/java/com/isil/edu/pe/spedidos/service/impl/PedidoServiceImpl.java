@@ -1,12 +1,13 @@
+
 package com.isil.edu.pe.spedidos.service.impl;
 
-import com.isil.edu.pe.spedidos.client.DevolucionStockClient;
-import com.isil.edu.pe.spedidos.client.InventarioClient;
-import com.isil.edu.pe.spedidos.client.InventarioClientException;
-import com.isil.edu.pe.spedidos.client.InventarioNoDisponibleException;
-import com.isil.edu.pe.spedidos.client.dto.DevolucionStockResponse;
-import com.isil.edu.pe.spedidos.client.dto.ProductoInventarioResponse;
-import com.isil.edu.pe.spedidos.client.dto.ReservaStockResponse;
+import com.isil.edu.pe.spedidos.client.inventario.DevolucionStockClient;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioClient;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioClientException;
+import com.isil.edu.pe.spedidos.client.inventario.InventarioNoDisponibleException;
+import com.isil.edu.pe.spedidos.client.inventario.dto.DevolucionStockResponse;
+import com.isil.edu.pe.spedidos.client.inventario.dto.ProductoInventarioResponse;
+import com.isil.edu.pe.spedidos.client.inventario.dto.ReservaStockResponse;
 import com.isil.edu.pe.spedidos.entity.Pedido;
 import com.isil.edu.pe.spedidos.exception.PedidoException;
 import com.isil.edu.pe.spedidos.repository.PedidoRepository;
@@ -153,6 +154,7 @@ public class PedidoServiceImpl implements PedidoService {
             );
         }
     }
+
     private void validarDatos(
             String cliente,
             String productoCodigo,
@@ -172,6 +174,7 @@ public class PedidoServiceImpl implements PedidoService {
             );
         }
     }
+
     private void validarReserva(ReservaStockResponse reserva) {
         if (reserva == null
                 || reserva.getCodigo() == null

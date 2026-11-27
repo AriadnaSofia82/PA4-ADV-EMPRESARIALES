@@ -187,8 +187,7 @@ class PedidoReporteJdbcRepositoryTest {
             int cantidad,
             BigDecimal total) {
 
-        jdbcTemplate.update(
-                """
+        String sql = """
                 INSERT INTO pedido (
                     cliente,
                     producto_codigo,
@@ -197,9 +196,13 @@ class PedidoReporteJdbcRepositoryTest {
                     cantidad,
                     total,
                     estado,
-                    fecha
-                ) VALUES (?, ?, ?, ?, ?, ?, 'REGISTRADO', CURRENT_TIMESTAMP)
-                """,
+                    fecha,
+                    revisado
+                ) VALUES (?, ?, ?, ?, ?, ?, 'REGISTRADO', CURRENT_TIMESTAMP, FALSE)
+                """;
+
+        jdbcTemplate.update(
+                sql,
                 cliente,
                 productoCodigo,
                 productoNombre,

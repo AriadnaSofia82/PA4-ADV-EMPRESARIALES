@@ -1,0 +1,150 @@
+{
+  "info": {
+    "_postman_id": "ca077c68-13b5-4ced-9e07-134da054d936",
+    "name": "PA4-ADV EMP - REPORTES PEDIDOS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54412828",
+    "_collection_link": "https://go.postman.co/collection/54412828-ca077c68-13b5-4ced-9e07-134da054d936?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00 - Autenticación CONSULTA",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 - Autenticación CONSULTA Log in",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "consulta"
+            },
+            {
+              "key": "password",
+              "value": "ConsultaDemo2026!"
+            },
+            {
+              "key": "_csrf",
+              "value": "2Pk_8Vdu1B61IhFWJ8ciHA_VnM0ZObwKfKT0F2T5bMD-9aZ9684Kw2YI4iyYFilhFuoWKGy0sa8tW4wnGcaWLgKYXvXIxJUb"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/sistema-pedidos/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "sistema-pedidos",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Consultar pedidos pendientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8083/pedidos-reportes-service/api/v1/pedidos/revisiones?estado=PENDIENTE",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "pedidos-reportes-service",
+            "api",
+            "v1",
+            "pedidos",
+            "revisiones"
+          ],
+          "query": [
+            {
+              "key": "estado",
+              "value": "PENDIENTE"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Consultar pedidos revisados",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8083/pedidos-reportes-service/api/v1/pedidos/revisiones?estado=REVISADO",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "pedidos-reportes-service",
+            "api",
+            "v1",
+            "pedidos",
+            "revisiones"
+          ],
+          "query": [
+            {
+              "key": "estado",
+              "value": "REVISADO"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - Consultar estadísticas de revisiones",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8083/pedidos-reportes-service/api/v1/pedidos/estadisticas/revisiones",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "pedidos-reportes-service",
+            "api",
+            "v1",
+            "pedidos",
+            "estadisticas",
+            "revisiones"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

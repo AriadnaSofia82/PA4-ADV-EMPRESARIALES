@@ -6,13 +6,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.math.BigDecimal;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
@@ -44,6 +41,8 @@ class PedidoReporteControllerIntegrationTest {
                 .apply(springSecurity())
                 .build();
 
+        // Limpiar primero la tabla dependiente, si existe.
+        jdbcTemplate.update("DELETE FROM anulacion_pedido");
         jdbcTemplate.update("DELETE FROM pedido");
 
         insertarPedido(
@@ -75,9 +74,8 @@ class PedidoReporteControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Return plain JSON and HTTP 200 when CONSULTA requests level 2 summary")
-    void returnPlainJsonAndHttp200WhenConsultaRequestsLevelTwoSummary()
-            throws Exception {
+    @DisplayName("Devuelve el resumen general en JSON")
+    void devuelveResumenGeneralEnJson() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos/estadisticas/resumen")
                         .with(user("consulta").roles("CONSULTA")))
@@ -86,13 +84,14 @@ class PedidoReporteControllerIntegrationTest {
                         MediaType.APPLICATION_JSON
                 ))
                 .andExpect(jsonPath("$.totalPedidos").value(3))
+                .andExpect(jsonPath("$.totalUnidades").value(7))
+                .andExpect(jsonPath("$.importeAcumulado").value(5250.00))
                 .andExpect(jsonPath("$._links").doesNotExist());
     }
 
     @Test
-    @DisplayName("Return plain JSON array when level 1 resource is filtered")
-    void returnPlainJsonArrayWhenLevelOneResourceIsFiltered()
-            throws Exception {
+    @DisplayName("Devuelve pedidos filtrados por cliente en JSON")
+    void devuelvePedidosFiltradosPorClienteEnJson() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos")
                         .param("cliente", "Ana")
@@ -101,14 +100,14 @@ class PedidoReporteControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith(
                         MediaType.APPLICATION_JSON
                 ))
-                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].cliente").value("Ana Torres"))
                 .andExpect(jsonPath("$._links").doesNotExist());
     }
 
     @Test
-    @DisplayName("Return HAL product sales collection when report is requested")
-    void returnHalProductSalesCollectionWhenReportIsRequested()
-            throws Exception {
+    @DisplayName("Devuelve productos más vendidos en formato HAL")
+    void devuelveProductosMasVendidosEnFormatoHal() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos/estadisticas/productos")
                         .with(user("operador").roles("OPERADOR")))
@@ -118,13 +117,13 @@ class PedidoReporteControllerIntegrationTest {
                 ))
                 .andExpect(jsonPath("$._embedded").exists())
                 .andExpect(jsonPath("$._links.self.href").exists())
-                .andExpect(jsonPath("$._links['estadisticas-resumen'].href").exists());
+                .andExpect(jsonPath("$._links['estadisticas-resumen'].href").exists())
+                .andExpect(jsonPath("$._links.pedidos.href").exists());
     }
 
     @Test
-    @DisplayName("Return not found when legacy action style search URI is requested")
-    void returnNotFoundWhenLegacyActionStyleSearchUriIsRequested()
-            throws Exception {
+    @DisplayName("La ruta antigua de búsqueda devuelve 404")
+    void rutaAntiguaDeBusquedaDevuelveNotFound() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos/buscar")
                         .param("cliente", "Ana")
@@ -133,9 +132,8 @@ class PedidoReporteControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Return advanced search results filtered by customer and minimum total")
-    void returnAdvancedSearchResultsFilteredByCustomerAndMinimumTotal()
-            throws Exception {
+    @DisplayName("Filtra pedidos por cliente e importe mínimo")
+    void filtraPedidosPorClienteEImporteMinimo() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos/busqueda-avanzada")
                         .param("cliente", "Ana")
@@ -151,9 +149,8 @@ class PedidoReporteControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Return frequent customers with their consolidated indicators")
-    void returnFrequentCustomersWithConsolidatedIndicators()
-            throws Exception {
+    @DisplayName("Devuelve clientes frecuentes con indicadores consolidados")
+    void devuelveClientesFrecuentesConIndicadoresConsolidados() throws Exception {
 
         mockMvc.perform(get("/api/v1/pedidos/clientes-frecuentes")
                         .param("minPedidos", "2")
@@ -188,8 +185,9 @@ class PedidoReporteControllerIntegrationTest {
                     cantidad,
                     total,
                     estado,
+                    revisado,
                     fecha
-                ) VALUES (?, ?, ?, ?, ?, ?, 'REGISTRADO', CURRENT_TIMESTAMP)
+                ) VALUES (?, ?, ?, ?, ?, ?, 'REGISTRADO', FALSE, CURRENT_TIMESTAMP)
                 """,
                 cliente,
                 productoCodigo,

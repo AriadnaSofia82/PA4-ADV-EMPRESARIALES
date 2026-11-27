@@ -1,6 +1,6 @@
 package com.isil.edu.pe.spedidos.service;
 
-import com.isil.edu.pe.spedidos.client.dto.ProductoInventarioResponse;
+import com.isil.edu.pe.spedidos.client.inventario.dto.ProductoInventarioResponse;
 import com.isil.edu.pe.spedidos.entity.Pedido;
 import com.isil.edu.pe.spedidos.exception.PedidoException;
 import com.isil.edu.pe.spedidos.service.impl.PedidoServiceImpl;
@@ -81,120 +81,120 @@ import java.util.List;
  */
 public interface PedidoService {
 
-  /**
-   * Registra un nuevo pedido aplicando las reglas de negocio definidas por
-   * la aplicación.
-   *
-   * <p>Esta operación representa un caso de uso de negocio. El Controller
-   * entrega los datos recibidos desde la solicitud y la capa de servicio se
-   * encarga de coordinar las acciones necesarias para completar el registro.</p>
-   *
-   * <p>Conceptualmente, el flujo es el siguiente:</p>
-   *
-   * <pre>
-   * validar datos de entrada
-   *          |
-   *          v
-   * consultar / reservar stock
-   *          |
-   *          v
-   * calcular importe del pedido
-   *          |
-   *          v
-   * construir entidad Pedido
-   *          |
-   *          v
-   * persistir el pedido
-   * </pre>
-   *
-   * <p>La persistencia se realiza en MySQL durante la ejecución normal de la
-   * aplicación. En las pruebas de integración, la misma operación puede
-   * ejecutarse sobre H2 utilizando el perfil {@code test}.</p>
-   *
-   * <p>La lógica concreta de validación, integración con Inventario y
-   * persistencia pertenece a la implementación del servicio. De esta manera,
-   * el Controller no necesita conocer esos detalles técnicos.</p>
-   *
-   * @param cliente nombre o identificación del cliente que realiza el pedido
-   * @param productoCodigo código del producto solicitado
-   * @param cantidad número de unidades que se desean registrar; debe cumplir
-   *                  las reglas de negocio definidas por la aplicación
-   * @return pedido creado y persistido satisfactoriamente
-   * @throws PedidoException si los datos incumplen una regla de negocio o la
-   *                         operación no puede completarse conforme a las
-   *                         condiciones definidas por el dominio
-   */
-  Pedido registrarPedido(String cliente, String productoCodigo, int cantidad);
+    /**
+     * Registra un nuevo pedido aplicando las reglas de negocio definidas por
+     * la aplicación.
+     *
+     * <p>Esta operación representa un caso de uso de negocio. El Controller
+     * entrega los datos recibidos desde la solicitud y la capa de servicio se
+     * encarga de coordinar las acciones necesarias para completar el registro.</p>
+     *
+     * <p>Conceptualmente, el flujo es el siguiente:</p>
+     *
+     * <pre>
+     * validar datos de entrada
+     *          |
+     *          v
+     * consultar / reservar stock
+     *          |
+     *          v
+     * calcular importe del pedido
+     *          |
+     *          v
+     * construir entidad Pedido
+     *          |
+     *          v
+     * persistir el pedido
+     * </pre>
+     *
+     * <p>La persistencia se realiza en MySQL durante la ejecución normal de la
+     * aplicación. En las pruebas de integración, la misma operación puede
+     * ejecutarse sobre H2 utilizando el perfil {@code test}.</p>
+     *
+     * <p>La lógica concreta de validación, integración con Inventario y
+     * persistencia pertenece a la implementación del servicio. De esta manera,
+     * el Controller no necesita conocer esos detalles técnicos.</p>
+     *
+     * @param cliente nombre o identificación del cliente que realiza el pedido
+     * @param productoCodigo código del producto solicitado
+     * @param cantidad número de unidades que se desean registrar; debe cumplir
+     *                  las reglas de negocio definidas por la aplicación
+     * @return pedido creado y persistido satisfactoriamente
+     * @throws PedidoException si los datos incumplen una regla de negocio o la
+     *                         operación no puede completarse conforme a las
+     *                         condiciones definidas por el dominio
+     */
+    Pedido registrarPedido(String cliente, String productoCodigo, int cantidad);
 
-  /**
-   * Obtiene la relación de productos disponibles desde el servicio externo
-   * de Inventario.
-   *
-   * <p>La capa de servicio abstrae al Controller de los detalles técnicos de
-   * integración. Por ello, quien invoca este método no necesita conocer cómo
-   * se construye la petición HTTP, qué URL utiliza el servicio remoto ni cómo
-   * se transforma la respuesta JSON.</p>
-   *
-   * <p>Conceptualmente:</p>
-   *
-   * <pre>
-   * PedidoController
-   *        |
-   *        v
-   * PedidoService.listarProductos()
-   *        |
-   *        v
-   * InventarioClient
-   *        |
-   *        | HTTP
-   *        v
-   * inventario-service
-   * </pre>
-   *
-   * <p>El resultado se representa mediante
-   * {@link ProductoInventarioResponse}, que funciona como DTO de integración y
-   * evita exponer directamente detalles internos del servicio externo.</p>
-   *
-   * @return lista de productos obtenidos desde {@code inventario-service};
-   *         el contenido concreto depende de la respuesta proporcionada por
-   *         dicho servicio
-   */
-  List<ProductoInventarioResponse> listarProductos();
+    /**
+     * Obtiene la relación de productos disponibles desde el servicio externo
+     * de Inventario.
+     *
+     * <p>La capa de servicio abstrae al Controller de los detalles técnicos de
+     * integración. Por ello, quien invoca este método no necesita conocer cómo
+     * se construye la petición HTTP, qué URL utiliza el servicio remoto ni cómo
+     * se transforma la respuesta JSON.</p>
+     *
+     * <p>Conceptualmente:</p>
+     *
+     * <pre>
+     * PedidoController
+     *        |
+     *        v
+     * PedidoService.listarProductos()
+     *        |
+     *        v
+     * InventarioClient
+     *        |
+     *        | HTTP
+     *        v
+     * inventario-service
+     * </pre>
+     *
+     * <p>El resultado se representa mediante
+     * {@link ProductoInventarioResponse}, que funciona como DTO de integración y
+     * evita exponer directamente detalles internos del servicio externo.</p>
+     *
+     * @return lista de productos obtenidos desde {@code inventario-service};
+     *         el contenido concreto depende de la respuesta proporcionada por
+     *         dicho servicio
+     */
+    List<ProductoInventarioResponse> listarProductos();
 
-  /**
-   * Recupera los pedidos registrados en la base de datos de la aplicación.
-   *
-   * <p>Esta operación delega el acceso a datos en la capa Repository. La capa
-   * de servicio no debería construir directamente sentencias SQL ni administrar
-   * conexiones JDBC para este caso de uso.</p>
-   *
-   * <p>El flujo conceptual es:</p>
-   *
-   * <pre>
-   * PedidoController
-   *        |
-   *        v
-   * PedidoService.listarPedidos()
-   *        |
-   *        v
-   * PedidoRepository
-   *        |
-   *        v
-   * Spring Data JPA / Hibernate
-   *        |
-   *        v
-   * MySQL / H2
-   * </pre>
-   *
-   * <p>En ejecución normal los datos se consultan desde MySQL. Durante las
-   * pruebas de integración, el perfil {@code test} permite realizar la misma
-   * operación utilizando H2.</p>
-   *
-   * <p>Esta separación mantiene a las capas superiores independientes de la
-   * tecnología de persistencia utilizada.</p>
-   *
-   * @return lista de pedidos registrados en el sistema
-   */
-  List<Pedido> listarPedidos();
+    /**
+     * Recupera los pedidos registrados en la base de datos de la aplicación.
+     *
+     * <p>Esta operación delega el acceso a datos en la capa Repository. La capa
+     * de servicio no debería construir directamente sentencias SQL ni administrar
+     * conexiones JDBC para este caso de uso.</p>
+     *
+     * <p>El flujo conceptual es:</p>
+     *
+     * <pre>
+     * PedidoController
+     *        |
+     *        v
+     * PedidoService.listarPedidos()
+     *        |
+     *        v
+     * PedidoRepository
+     *        |
+     *        v
+     * Spring Data JPA / Hibernate
+     *        |
+     *        v
+     * MySQL / H2
+     * </pre>
+     *
+     * <p>En ejecución normal los datos se consultan desde MySQL. Durante las
+     * pruebas de integración, el perfil {@code test} permite realizar la misma
+     * operación utilizando H2.</p>
+     *
+     * <p>Esta separación mantiene a las capas superiores independientes de la
+     * tecnología de persistencia utilizada.</p>
+     *
+     * @return lista de pedidos registrados en el sistema
+     */
+    List<Pedido> listarPedidos();
 
 }
